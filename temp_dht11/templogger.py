@@ -3,10 +3,18 @@
 import Adafruit_DHT
 import time
 from datetime import datetime
+import argparse
 
 global sensor
 
 sensor = Adafruit_DHT.DHT11
+
+
+parser = argparse.ArgumentParser()
+parser.add_argument("timeinterval")
+args = parser.parse_args()
+print(args.timeinterval)
+
 def __init__():
     pass
 
