@@ -4,45 +4,41 @@ import Adafruit_DHT
 import time
 from datetime import datetime
 import argparse
+import sys
 
 global sensor
 
 sensor = Adafruit_DHT.DHT11
 
-
-parser = argparse.ArgumentParser()
-parser.add_argument("timeinterval")
-args = parser.parse_args()
-print(args.timeinterval)
-
-def __init__():
-    pass
+def parse_arguments():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("timeinterval", type=int, help='an integer for the time to next meassurement in sec')
+    parser.add_argument("pin", type=int,\
+            help='an integer for the INPUT PIN on the your board that is connected to the datapin of the DHT11')
+    args = parser.parse_args()
+    ARG_TIME = int(args.timeinterval)
+    ARG_PIN = int(args.pin)
+    return ARG_TIME, ARG_PIN
 
 def get_data(sensor, pin):
     times = 0
-    sumhum = 0
-    sumtemp = 0
     humset = []
     tempset = []
     clocktime = str(datetime.now().time())[0:8]
     date = str(datetime.now().date())
-
     while times < 10:
         hum, temp = Adafruit_DHT.read_retry(sensor, pin)
         humset.append(hum)
         tempset.append(temp)
-        sumhum += humset[times]
-        sumtemp += tempset[times]
         times += 1
-        time.sleep(1)
-    avghum = sumhum / len(humset)
-    avgtemp = sumtemp / len(tempset)
-    avgdata = [date, clocktime, avghum, avgtemp]
-    return avgdata
+    avghum = sum(humset) / len(humset)
+    avgtemp = sum(tempset) / len(tempset)
+    data_script = [date, clocktime, avghum, avgtemp]
+    return data_script
 
+# program
+TIME_TO_NEXT, PIN = parse_arguments()
 while True:
-    print(10 * "-")
-    newdata = get_data(sensor,17)
-    print(newdata[0], newdata[1], newdata[2], newdata[3])
-    time.sleep(600)
-
+    newdata = get_data(sensor,PIN)
+    print(newdata[0], ",", newdata[1], ",", newdata[2], ",", newdata[3])
+    time.sleep(TIME_TO_NEXT)
