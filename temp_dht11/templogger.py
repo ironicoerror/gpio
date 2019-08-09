@@ -26,11 +26,12 @@ def get_data(sensor, pin):
     tempset = []
     clocktime = str(datetime.now().time())[0:8]
     date = str(datetime.now().date())
-    while times < 10:
-        hum, temp = Adafruit_DHT.read_retry(sensor, pin)
-        humset.append(hum)
-        tempset.append(temp)
-        times += 1
+    for _ in range(times):
+        humset.append(Adafruit_DHT.read_retry(sensor, pin)[0])
+        tempset.append(Adafruit_DHT.read_retry(sensor, pin)[1])
+        #humset.append(hum)
+        #tempset.append(temp)
+        times +=1
     avghum = sum(humset) / len(humset)
     avgtemp = sum(tempset) / len(tempset)
     data_script = [date, clocktime, avghum, avgtemp]
