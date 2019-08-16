@@ -4,7 +4,7 @@
 from time import sleep
 import RPi.GPIO as GPIO
 
-BASEPIN = 8
+BASEPIN = 14 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(BASEPIN, GPIO.OUT)
 
